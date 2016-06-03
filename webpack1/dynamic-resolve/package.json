@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "good": "./node_modules/webpack/bin/webpack.js --config ./webpack.good.config.js",
+    "bad": "./node_modules/webpack/bin/webpack.js --config ./webpack.bad.config.js",
+    "clean": "rm -rf ./build"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^1.13.1"
+  }
+}

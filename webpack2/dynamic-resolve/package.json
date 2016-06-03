@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "bad1": "./node_modules/webpack/bin/webpack.js --config ./webpack.bad.1.config.js",
+    "bad2": "./node_modules/webpack/bin/webpack.js --config ./webpack.bad.2.config.js",
+    "clean": "rm -rf ./build"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^2.1.0-beta.8"
+  }
+}
