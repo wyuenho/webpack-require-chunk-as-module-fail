@@ -24,14 +24,14 @@ module.exports = {
   // Uncommenting any or all of the following blocks makes no
   // difference. Webpack 1 just plainly refuses to treat chunks as requireable
   // modules.
-  resolve: {
-    a: "build/a.js"
-  },
+  // resolve: {
+  //  a: "build/a.js"
+  // },
 
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "index"
-    }),
-  ]
+  // plugins: [
+  //  new webpack.optimize.CommonsChunkPlugin({
+  //    name: "index"
+  //  }),
+  //]
 
 }
