@@ -3,5 +3,5 @@ requirable modules.
 
 Read the READMEs under each directory to find out how to experiment with it.
 
-Also, make sure you read the generated bundle.js files, the glues to why are all
+Also, make sure you read the generated bundle files, the clues to why are all
 there.
