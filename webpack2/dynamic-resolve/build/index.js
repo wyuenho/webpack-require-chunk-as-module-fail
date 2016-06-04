@@ -1,7 +1,7 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -12,13 +12,17 @@
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId))
+/******/ 				modules[moduleId] = moreModules[moduleId];
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
-/******/ 		if(executeModule + 1) { // typeof executeModule === "number"
-/******/ 			return __webpack_require__(executeModule);
+/******/ 		if(executeModules) {
+/******/ 			for(moduleId in executeModules) {
+/******/ 				if(Object.prototype.hasOwnProperty.call(executeModules, moduleId))
+/******/ 					return __webpack_require__(moduleId);
+/******/ 			}
 /******/ 		}
 /******/ 	};
 
@@ -58,7 +62,7 @@
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -99,6 +103,9 @@
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "build/";
 
@@ -106,24 +113,11 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
-
-	function webpackEmptyContext(req) {
-		throw new Error("Cannot find module '" + req + "'.");
-	}
-	webpackEmptyContext.keys = function() { return []; };
-	webpackEmptyContext.resolve = webpackEmptyContext;
-	module.exports = webpackEmptyContext;
-	webpackEmptyContext.id = 0;
-
-
-/***/ },
-/* 1 */
 /***/ function(module, exports) {
 
 	var g;
@@ -148,7 +142,7 @@
 
 
 /***/ },
-/* 2 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -361,7 +355,20 @@
 	  cached = {};
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	function webpackEmptyContext(req) {
+		throw new Error("Cannot find module '" + req + "'.");
+	}
+	webpackEmptyContext.keys = function() { return []; };
+	webpackEmptyContext.resolve = webpackEmptyContext;
+	module.exports = webpackEmptyContext;
+	webpackEmptyContext.id = 2;
+
 
 /***/ },
 /* 3 */,
@@ -390,13 +397,13 @@
 
 	module.exports = checkGlobal;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process, global, module) {var require;var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	/* WEBPACK VAR INJECTION */(function(process, global) {var require;var __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
@@ -526,7 +533,7 @@
 	    function lib$es6$promise$asap$$attemptVertx() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(11);
+	        var vertx = __webpack_require__(9);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -1344,7 +1351,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(6)['amd']) {
+	    if (true) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -1356,43 +1363,10 @@
 	}).call(this);
 
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(1), __webpack_require__(7)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(0)))
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
-
-	module.exports = function() { throw new Error("define cannot be used indirect"); };
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			Object.defineProperty(module, "loaded", {
-				enumerable: true,
-				configurable: false,
-				get: function() { return module.l; }
-			});
-			Object.defineProperty(module, "id", {
-				enumerable: true,
-				configurable: false,
-				get: function() { return module.i; }
-			});
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-/* 8 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1492,11 +1466,11 @@
 
 
 /***/ },
-/* 9 */,
-/* 10 */
+/* 7 */,
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var promisescript = __webpack_require__(2);
+	var promisescript = __webpack_require__(1);
 	var a = './a';
 	var c = './c';
 
@@ -1513,16 +1487,18 @@
 
 	// `a` can be loaded and required, but totally useless since
 	promisescript(__webpack_require__.p + 'a.js').then(function () {
-	  console.log('index requirement of c successfull: %s', !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()) === 100);
-
 	  // this fails silently
 	  console.log(/*require.resolve*/(!(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+
+	  // This fails silently too
+	  // console.log('index requirement of c successfull: %s', require(c) === 100);
+
 	  console.log('you wont see me');
 	});
 
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
