@@ -1,6 +1,37 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId])
+/******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		while(callbacks.length)
+/******/ 			callbacks.shift().call(null, __webpack_require__);
+/******/ 		if(moreModules[0]) {
+/******/ 			installedModules[0] = 0;
+/******/ 			return __webpack_require__(0);
+/******/ 		}
+/******/ 	};
+
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// "0" means "already loaded"
+/******/ 	// Array means "loading", array contains callbacks
+/******/ 	var installedChunks = {
+/******/ 		1:0
+/******/ 	};
 
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +57,29 @@
 /******/ 		return module.exports;
 /******/ 	}
 
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
+/******/ 		// "0" is the signal for "already loaded"
+/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 			return callback.call(null, __webpack_require__);
+
+/******/ 		// an array means "currently loading".
+/******/ 		if(installedChunks[chunkId] !== undefined) {
+/******/ 			installedChunks[chunkId].push(callback);
+/******/ 		} else {
+/******/ 			// start chunk loading
+/******/ 			installedChunks[chunkId] = [callback];
+/******/ 			var head = document.getElementsByTagName('head')[0];
+/******/ 			var script = document.createElement('script');
+/******/ 			script.type = 'text/javascript';
+/******/ 			script.charset = 'utf-8';
+/******/ 			script.async = true;
+
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"0":"a"}[chunkId]||chunkId) + ".js";
+/******/ 			head.appendChild(script);
+/******/ 		}
+/******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -44,22 +98,27 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var promisescript = __webpack_require__(1);
+	var promisescript = __webpack_require__(3);
 	var a = './a';
+	var c = './c';
 
-	console.log(/*require.resolve*/(__webpack_require__(8).resolve(a)));
+	// Works for both `good` and `bad`
+	// console.log(require.resolve(a));
 
-	// As long as module `a` is set as an entry point, Webpack refuses to generate a
-	// mapping from path to internal module ID (AKA context in Webpack parlance) for
-	// module `a` in the bundle.
+	// This fails for `bad`, Webpack 1 doesn't understand the `a` reference inside
+	// `require.ensure`, so it just replaced `require` with `__webpack_require__`,
+	// but the `require.ensure` implementation in Webpack 1 is called
+	// `__webpack_require__.e`
+	// require.ensure([a], function () {
+	//   console.log(require.resolve(a));
+	// });
+
+	// This works for Webpack 1, as long as the you remember to list out the chunks
+	// `index` requires in webpack.config.js
 	promisescript(__webpack_require__.p + 'a.js').then(function () {
-	  // Uncommenting this line will result in a build error
-	  // console.log(require.resolve('./a'));
-
-	  // As demonstrated by the good case, Webpack 1 is fully capable of generating
-	  // a mapping from path to internal module ID automatically, it just refuses to
-	  // do so for requirements of chunks
-	  console.log(/*require.resolve*/(__webpack_require__(8).resolve(a)));
+	  console.log(__webpack_require__(10)(a));
+	  console.log(/*require.resolve*/(__webpack_require__(10).resolve(a)));
+	  console.log('index requirement of c successfull: %s', __webpack_require__(10)(c) === 100);
 	});
 
 
@@ -67,9 +126,27 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// This is `a`
+
+	console.log(__webpack_require__(2));
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	// This is `c`
+
+	module.exports = 100;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	var ES6Promise = __webpack_require__(2).Promise;
-	var checkGlobal = __webpack_require__(7);
+	var ES6Promise = __webpack_require__(4).Promise;
+	var checkGlobal = __webpack_require__(9);
 	var doc = global.document;
 	var cached = {};
 
@@ -279,7 +356,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
@@ -412,7 +489,7 @@
 	    function lib$es6$promise$asap$$attemptVertx() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(5);
+	        var vertx = __webpack_require__(7);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -1230,7 +1307,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(6)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(8)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -1242,10 +1319,10 @@
 	}).call(this);
 
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), (function() { return this; }()), __webpack_require__(4)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), (function() { return this; }()), __webpack_require__(6)(module)))
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1345,7 +1422,7 @@
 
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -1361,20 +1438,20 @@
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -1401,10 +1478,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var map = {};
+	var map = {
+		"./a": 1,
+		"./a.js": 1,
+		"./b": 11,
+		"./b.js": 11,
+		"./c": 2,
+		"./c.js": 2,
+		"./d": 12,
+		"./d.js": 12
+	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
 	};
@@ -1416,7 +1502,23 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 8;
+	webpackContext.id = 10;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// This is `b`
+
+	console.log(__webpack_require__(2));
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	// This is `d`
 
 
 /***/ }

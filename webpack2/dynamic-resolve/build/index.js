@@ -1,6 +1,34 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId])
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		while(resolves.length)
+/******/ 			resolves.shift()();
+/******/ 		if(executeModule + 1) { // typeof executeModule === "number"
+/******/ 			return __webpack_require__(executeModule);
+/******/ 		}
+/******/ 	};
+
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+
+/******/ 	// objects to store loaded and loading chunks
+/******/ 	var installedChunks = {
+/******/ 		0: 0
+/******/ 	};
 
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +54,44 @@
 /******/ 		return module.exports;
 /******/ 	}
 
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 			return Promise.resolve()
+
+/******/ 		// an Promise means "currently loading".
+/******/ 		if(installedChunks[chunkId]) {
+/******/ 			return installedChunks[chunkId][2];
+/******/ 		}
+/******/ 		// start chunk loading
+/******/ 		var head = document.getElementsByTagName('head')[0];
+/******/ 		var script = document.createElement('script');
+/******/ 		script.type = 'text/javascript';
+/******/ 		script.charset = 'utf-8';
+/******/ 		script.async = true;
+/******/ 		script.timeout = 120000;
+
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
+/******/ 		script.onerror = script.onload = onScriptComplete;
+/******/ 		function onScriptComplete() {
+/******/ 			// avoid mem leaks in IE.
+/******/ 			script.onerror = script.onload = null;
+/******/ 			clearTimeout(timeout);
+/******/ 			var chunk = installedChunks[chunkId];
+/******/ 			if(chunk !== 0) {
+/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				installedChunks[chunkId] = undefined;
+/******/ 			}
+/******/ 		};
+/******/ 		head.appendChild(script);
+
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -36,12 +102,28 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "build/";
 
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports) {
+
+	function webpackEmptyContext(req) {
+		throw new Error("Cannot find module '" + req + "'.");
+	}
+	webpackEmptyContext.keys = function() { return []; };
+	webpackEmptyContext.resolve = webpackEmptyContext;
+	module.exports = webpackEmptyContext;
+	webpackEmptyContext.id = 0;
+
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
 	var g;
@@ -66,13 +148,13 @@
 
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	var ES6Promise = __webpack_require__(4).Promise;
-	var checkGlobal = __webpack_require__(3);
+	var ES6Promise = __webpack_require__(5).Promise;
+	var checkGlobal = __webpack_require__(4);
 	var doc = global.document;
 	var cached = {};
 
@@ -279,23 +361,11 @@
 	  cached = {};
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	function webpackEmptyContext(req) {
-		throw new Error("Cannot find module '" + req + "'.");
-	}
-	webpackEmptyContext.keys = function() { return []; };
-	webpackEmptyContext.resolve = webpackEmptyContext;
-	module.exports = webpackEmptyContext;
-	webpackEmptyContext.id = 2;
-
-
-/***/ },
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -320,10 +390,10 @@
 
 	module.exports = checkGlobal;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, global, module) {var require;var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -456,7 +526,7 @@
 	    function lib$es6$promise$asap$$attemptVertx() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(10);
+	        var vertx = __webpack_require__(11);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -1274,7 +1344,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(5)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(6)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -1286,17 +1356,17 @@
 	}).call(this);
 
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(0), __webpack_require__(6)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(1), __webpack_require__(7)(module)))
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -1322,7 +1392,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1422,30 +1492,37 @@
 
 
 /***/ },
-/* 8 */,
-/* 9 */
+/* 9 */,
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var promisescript = __webpack_require__(1);
+	var promisescript = __webpack_require__(2);
 	var a = './a';
+	var c = './c';
 
+	// Fails for both `bad2` and `bad2`
 	// console.log(require.resolve(a));
 
-	// As long as module `a` is set as an entry point, Webpack refuses to generate a
-	// mapping from path to internal module ID (AKA context in Webpack parlance) for
-	// module `a` in the bundle.
-	promisescript(__webpack_require__.p + 'a.js').then(function () {
-	  // Uncommenting this line will result in a build error
-	  // console.log(require.resolve('./a'));
+	// This also fails for both `bad`` and `bad2`.  webpack 2 can't chase the
+	// reference of `a`, and doesn't inject a map of module paths from the point of
+	// view of `index.js` into the bundle, so webpack 2 can neither resolve this at
+	// build time nor run time.
+	// require.ensure([a], function () {
+	//   console.log(require.resolve(a));
+	// });
 
-	  // Same as Webpack 1's bad case, Webpack 2 is refuses to generate a mapping
-	  // from path to internal module ID
+	// `a` can be loaded and required, but totally useless since
+	promisescript(__webpack_require__.p + 'a.js').then(function () {
+	  console.log('index requirement of c successfull: %s', !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()) === 100);
+
+	  // this fails silently
 	  console.log(/*require.resolve*/(!(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+	  console.log('you wont see me');
 	});
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/* (ignored) */

@@ -8,7 +8,7 @@ module.exports = {
   debug: true,
 
   entry: {
-    index: "./src/index.js",
+    index: "./src/index.js"
   },
 
   output: {

@@ -1,17 +1,22 @@
 var promisescript = require('promisescript');
 var a = './a';
+var c = './c';
 
-console.log(require.resolve(a));
+// Works for both `good` and `bad`
+// console.log(require.resolve(a));
 
-// As long as module `a` is set as an entry point, Webpack refuses to generate a
-// mapping from path to internal module ID (AKA context in Webpack parlance) for
-// module `a` in the bundle.
-// promisescript(__webpack_public_path__ + 'a.js').then(function () {
-//   // Uncommenting this line will result in a build error
-//   // console.log(require.resolve('./a'));
-
-//   // As demonstrated by the good case, Webpack 1 is fully capable of generating
-//   // a mapping from path to internal module ID automatically, it just refuses to
-//   // do so for requirements of chunks
+// This fails for `bad`, Webpack 1 doesn't understand the `a` reference inside
+// `require.ensure`, so it just replaced `require` with `__webpack_require__`,
+// but the `require.ensure` implementation in Webpack 1 is called
+// `__webpack_require__.e`
+// require.ensure([a], function () {
 //   console.log(require.resolve(a));
 // });
+
+// This works for Webpack 1, as long as the you remember to list out the chunks
+// `index` requires in webpack.config.js
+promisescript(__webpack_public_path__ + 'a.js').then(function () {
+  console.log(require(a));
+  console.log(require.resolve(a));
+  console.log('index requirement of c successfull: %s', require(c) === 100);
+});
