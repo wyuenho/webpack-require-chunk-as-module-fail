@@ -14,8 +14,4 @@
 1. `$ npm run bad`
 2. Go to http://0.0.0.0:8080 on your browser
 3. Open the DevTool console with CMD-J
-4. You should see and error `Uncaught Error: Cannot find module './a'.`
-
-### Failure Reason
-
-Webpack does not treat entry chunks as requirable module
+4. Read the comment in index.js to find out the various failure modes
