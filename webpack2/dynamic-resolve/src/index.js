@@ -13,8 +13,22 @@ var c = './c';
 //   console.log(require.resolve(a));
 // });
 
+// `Error: Can't resolve` on first try on a clean build, second try `Cannot find
+// module '././a'`
+// System.import('../build/' + a).then(function () {
+
+// `Uncaught Error: Cannot find module './a'`
+// System.import(a).then(function () {
+
+// ReferenceError: __webpack_public_path__ is not defined
+// System.import(__webpack_public_path__ + 'a.js').then(function () {
+// System.import(__webpack_public_path__ + './a.js').then(function () {
+// System.import(__webpack_public_path__ + './a').then(function () {
+// System.import(__webpack_public_path__ + a).then(function () {
+
 // `a` can be loaded and required, but totally useless since
 promisescript(__webpack_public_path__ + 'a.js').then(function () {
+
   // this fails silently
   console.log(require.resolve(a));
 

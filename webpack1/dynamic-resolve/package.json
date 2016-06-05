@@ -6,6 +6,7 @@
   },
   "license": "ISC",
   "devDependencies": {
+    "bundle-loader": "^0.5.4",
     "webpack": "^1.13.1"
   },
   "dependencies": {

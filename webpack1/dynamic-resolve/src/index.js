@@ -13,6 +13,14 @@ var c = './c';
 //   console.log(require.resolve(a));
 // });
 
+// `Error: Cannot resolve` on 1st run after clean, only works on the second run,
+// using the bundle generated previously in the failed 1st run. It does behave
+// correctly after that.
+// require.context('bundle!../build')(a)(function(modA) {
+//   console.log(modA);
+//   console.log('you should see me');
+// });
+
 // This works for Webpack 1, as long as the you remember to list out the chunks
 // `index` requires in webpack.config.js
 promisescript(__webpack_public_path__ + 'a.js').then(function () {
