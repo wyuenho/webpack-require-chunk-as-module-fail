@@ -2,7 +2,7 @@ var promisescript = require('promisescript');
 var a = './a';
 var c = './c';
 
-// Fails for both `bad2` and `bad2`
+// Fails for both `bad1` and `bad2`
 // console.log(require.resolve(a));
 
 // This also fails for both `bad` and `bad2`. Webpack 2 can't chase the
