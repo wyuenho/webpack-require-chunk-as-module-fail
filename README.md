@@ -1,5 +1,4 @@
-This repo demostrates how Webpack 1 and 2's failure to treat code chunks as
-requirable modules.
+This repo demostrates how Webpack 1 and 2's failure to deal with dynamic requires.
 
 Read the READMEs under each directory to find out how to experiment with it.
 
