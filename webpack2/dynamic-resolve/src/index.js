@@ -5,7 +5,7 @@ var c = './c';
 // Fails for both `bad1` and `bad2`
 // console.log(require.resolve(a));
 
-// This also fails for both `bad` and `bad2`. Webpack 2 can't chase the
+// This also fails for both `bad1` and `bad2`. Webpack 2 can't chase the
 // reference of `a`, and doesn't inject a map of module paths from the point of
 // view of `index.js` into the bundle, so webpack 2 can neither resolve this at
 // build time nor run time.
